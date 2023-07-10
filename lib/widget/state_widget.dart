@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 class StateWidget extends StatelessWidget {
   final IconData icon;
   final String message;
-  final double ratio;
 
   const StateWidget({
     Key? key,
     required this.icon,
     required this.message,
-    required this.ratio,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    final ratio =
+        (screenSize.width / screenSize.height) / (423.529419 / 803.137269);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

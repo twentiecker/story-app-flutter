@@ -28,8 +28,6 @@ class _StoryAppState extends State<StoryApp> {
 
   /// todo 6: add variable for create instance
   late AuthProvider authProvider;
-  late GetStoryResponseProvider getStoryResponseProvider;
-  late DetailStoryResponseProvider detailStoryResponseProvider;
 
   @override
   void initState() {
@@ -37,8 +35,6 @@ class _StoryAppState extends State<StoryApp> {
     final authRepository = AuthRepository();
 
     authProvider = AuthProvider(authRepository);
-    getStoryResponseProvider = GetStoryResponseProvider(apiService: ApiService(), authRepository: authRepository);
-    detailStoryResponseProvider = DetailStoryResponseProvider(apiService: ApiService(), authRepository: authRepository, id: id)
 
     /// todo 7: inject auth to router delegate
     myRouterDelegate = MyRouterDelegate(authRepository);
@@ -46,23 +42,11 @@ class _StoryAppState extends State<StoryApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => authProvider),
-        ChangeNotifierProvider(create: (context) => getStoryResponseProvider),
-        ChangeNotifierProvider(create: (context) => detailStoryResponseProvider)
-      ],
-      child: MaterialApp(
-        title: 'Story App',
-        home: Router(
-          routerDelegate: myRouterDelegate,
-          backButtonDispatcher: RootBackButtonDispatcher(),
-        ),
-      ),
-    );
-
-    // ChangeNotifierProvider(
-    //   create: (context) => authProvider,
+    return
+    //   MultiProvider(
+    //   providers: [
+    //     ChangeNotifierProvider(create: (context) => authProvider),
+    //   ],
     //   child: MaterialApp(
     //     title: 'Story App',
     //     home: Router(
@@ -71,5 +55,16 @@ class _StoryAppState extends State<StoryApp> {
     //     ),
     //   ),
     // );
+
+    ChangeNotifierProvider(
+      create: (context) => authProvider,
+      child: MaterialApp(
+        title: 'Story App',
+        home: Router(
+          routerDelegate: myRouterDelegate,
+          backButtonDispatcher: RootBackButtonDispatcher(),
+        ),
+      ),
+    );
   }
 }

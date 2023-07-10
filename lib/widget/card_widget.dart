@@ -6,16 +6,17 @@ import '../model/get_story_response.dart';
 
 class CardWidget extends StatelessWidget {
   final ListStory story;
+  final Function(String) onTapped;
 
   const CardWidget({
     Key? key,
-    required this.story,
+    required this.story, required this.onTapped,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () => onTapped(story.id),
       child: Column(
         children: [
           CachedNetworkImage(

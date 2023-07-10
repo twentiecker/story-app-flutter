@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:story_app_flutter/model/get_story_response.dart';
 import 'package:story_app_flutter/provider/get_story_response_provider.dart';
 import 'package:story_app_flutter/widget/card_widget.dart';
 
@@ -9,7 +10,7 @@ import '../utils/result_state.dart';
 import '../widget/state_widget.dart';
 
 class QuotesListScreen extends StatelessWidget {
-  final List<Quote> quotes;
+  final List<ListStory> quotes;
   final Function(String) onTapped;
   final Function() onLogout;
 
@@ -22,52 +23,56 @@ class QuotesListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
-    final ratio =
-        (screenSize.width / screenSize.height) / (423.529419 / 803.137269);
+    // Size screenSize = MediaQuery.of(context).size;
+    // final ratio =
+    //     (screenSize.width / screenSize.height) / (423.529419 / 803.137269);
     final authWatch = context.watch<AuthProvider>();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Story App"),
       ),
-      body: Consumer<GetStoryResponseProvider>(builder: (context, state, _) {
-        if (state.state == ResultState.loading) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (state.state == ResultState.hasData) {
-          return SingleChildScrollView(
-            child: Column(
-              children: state.result.listStory
-                  .map((story) => CardWidget(story: story))
-                  .toList(),
-            ),
-          );
-        } else if (state.state == ResultState.noData) {
-          return Center(
-            child: StateWidget(
-              icon: Icons.not_interested_rounded,
-              message: state.message,
-              ratio: ratio,
-            ),
-          );
-        } else if (state.state == ResultState.error) {
-          return  Center(
-            child: StateWidget(
-              icon: Icons.signal_wifi_connected_no_internet_4_rounded,
-              message: 'No Internet Connection',
-              ratio: ratio,
-            ),
-          );
-        } else {
-          return const Center(
-            child: Text(''),
-          );
-        }
-
-        // state.result.listStory.map((e) => print(e.id)).toList();
-        // return Text('data');
-      }),
+      body: SingleChildScrollView(
+        child: Column(
+          children: quotes
+              .map((story) => CardWidget(story: story, onTapped: onTapped))
+              .toList(),
+        ),
+      ),
+      // Consumer<GetStoryResponseProvider>(builder: (context, state, _) {
+      //   if (state.state == ResultState.loading) {
+      //     return Center(
+      //       child: CircularProgressIndicator(),
+      //     );
+      //   } else if (state.state == ResultState.hasData) {
+      //     return SingleChildScrollView(
+      //       child: Column(
+      //         children: quotes
+      //             .map((story) => CardWidget(story: story, onTapped: onTapped))
+      //             .toList(),
+      //       ),
+      //     );
+      //   } else if (state.state == ResultState.noData) {
+      //     return Center(
+      //       child: StateWidget(
+      //         icon: Icons.not_interested_rounded,
+      //         message: state.message,
+      //         ratio: ratio,
+      //       ),
+      //     );
+      //   } else if (state.state == ResultState.error) {
+      //     return  Center(
+      //       child: StateWidget(
+      //         icon: Icons.signal_wifi_connected_no_internet_4_rounded,
+      //         message: 'No Internet Connection',
+      //         ratio: ratio,
+      //       ),
+      //     );
+      //   } else {
+      //     return const Center(
+      //       child: Text(''),
+      //     );
+      //   }
+      // }),
 
       /// todo 18: add FAB and update the UI when button is tapped.
       floatingActionButton: FloatingActionButton(

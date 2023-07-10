@@ -17,6 +17,18 @@ class DetailStoryResponseProvider extends ChangeNotifier {
     required this.id,
   }) {
     _fetchDetailStoryResponse();
+    _detailStoryResponse = DetailStoryResponse(
+      error: true,
+      message: 'message',
+      story: Story(
+          id: 'Loading...',
+          name: 'Loading...',
+          description: 'Loading...',
+          photoUrl: 'Loading...',
+          createdAt: DateTime.parse('0000-00-00'),
+          lat: 0.0,
+          lon: 0.0),
+    );
   }
 
   late DetailStoryResponse _detailStoryResponse;

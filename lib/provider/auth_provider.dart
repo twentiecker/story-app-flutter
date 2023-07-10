@@ -32,17 +32,17 @@ class AuthProvider extends ChangeNotifier {
   // }
 
   Future<bool> login(LoginResult user) async {
-    print(user.name);
+    // print(user.name);
     // final userState = await authRepository.getUser();
     // if (user == userState) {
     //   await authRepository.login();
     // }
-    authRepository.saveToken(user.token);
+    await authRepository.saveToken(user.token);
     await authRepository.login();
     isLoggedIn = await authRepository.isLoggedIn();
 
-    final String cekToken = await authRepository.getToken();
-    print('cekToken: $cekToken');
+    // final String cekToken = await authRepository.getToken();
+    // print('cekToken: $cekToken');
 
     isLoadingLogin = false;
     notifyListeners();

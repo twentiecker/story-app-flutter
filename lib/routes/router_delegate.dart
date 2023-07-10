@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:story_app_flutter/api/api_service.dart';
+import 'package:story_app_flutter/model/get_story_response.dart';
 
 import '../db/auth_repository.dart';
 import '../model/quote.dart';
+import '../provider/get_story_response_provider.dart';
 import '../screen/login_screen.dart';
 import '../screen/quote_detail_screen.dart';
 import '../screen/quotes_list_screen.dart';
 import '../screen/register_screen.dart';
 import '../screen/splash_screen.dart';
+import '../utils/result_state.dart';
+import '../widget/state_widget.dart';
 
 class MyRouterDelegate extends RouterDelegate
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
@@ -112,19 +118,63 @@ class MyRouterDelegate extends RouterDelegate
   List<Page> get _loggedInStack => [
         MaterialPage(
           key: const ValueKey("QuotesListPage"),
-          child: QuotesListScreen(
-            quotes: quotes,
-            onTapped: (String quoteId) {
-              selectedQuote = quoteId;
-              notifyListeners();
-            },
+          child: ChangeNotifierProvider(
+            create: (BuildContext context) => GetStoryResponseProvider(
+                apiService: ApiService(), authRepository: authRepository),
+            child: Consumer<GetStoryResponseProvider>(
+              builder: (context, state, _) {
+                if (state.state == ResultState.loading) {
+                  return Scaffold(
+                    appBar: AppBar(),
+                    body: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                } else if (state.state == ResultState.hasData) {
+                  return QuotesListScreen(
+                    quotes: state.result.listStory,
+                    onTapped: (String quoteId) {
+                      selectedQuote = quoteId;
+                      notifyListeners();
+                    },
 
-            /// todo 21: add onLogout method to update the state and
-            /// create a logout button
-            onLogout: () {
-              isLoggedIn = false;
-              notifyListeners();
-            },
+                    /// todo 21: add onLogout method to update the state and
+                    /// create a logout button
+                    onLogout: () {
+                      isLoggedIn = false;
+                      notifyListeners();
+                    },
+                  );
+                } else if (state.state == ResultState.noData) {
+                  return Scaffold(
+                    appBar: AppBar(),
+                    body: Center(
+                      child: StateWidget(
+                        icon: Icons.not_interested_rounded,
+                        message: state.message,
+                      ),
+                    ),
+                  );
+                } else if (state.state == ResultState.error) {
+                  return Scaffold(
+                    appBar: AppBar(),
+                    body: Center(
+                      child: StateWidget(
+                        icon: Icons.signal_wifi_connected_no_internet_4_rounded,
+                        message: 'No Internet Connection',
+                      ),
+                    ),
+                  );
+                } else {
+                  return Scaffold(
+                    appBar: AppBar(),
+                    body: const Center(
+                      child: Text(''),
+                    ),
+                  );
+                }
+              },
+            ),
           ),
         ),
         if (selectedQuote != null)

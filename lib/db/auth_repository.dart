@@ -32,14 +32,13 @@ class AuthRepository {
   //   return preferences.setString(userKey, user.toJson());
   // }
 
-  void saveToken(String token) async {
+  Future<bool> saveToken(String token) async {
     final preferences = await SharedPreferences.getInstance();
-    preferences.setString(userKey, token);
+    return preferences.setString(userKey, token);
   }
 
   Future<String> getToken() async {
     final preferences = await SharedPreferences.getInstance();
-    // await Future.delayed(const Duration(seconds: 2));
     final token = preferences.getString(userKey) ?? "";
     return token;
   }

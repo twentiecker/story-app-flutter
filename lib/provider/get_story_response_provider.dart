@@ -15,6 +15,9 @@ class GetStoryResponseProvider extends ChangeNotifier {
     required this.authRepository,
   }) {
     _fetchGetStoryResponse();
+    _getStoryResponse =
+        GetStoryResponse(error: false, message: 'Loading...', listStory: []);
+    _state = ResultState.loading;
   }
 
   late GetStoryResponse _getStoryResponse;
