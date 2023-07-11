@@ -6,6 +6,8 @@ import 'package:story_app_flutter/model/register_response.dart';
 import 'package:story_app_flutter/provider/auth_provider.dart';
 import 'package:story_app_flutter/provider/detail_story_response_provider.dart';
 import 'package:story_app_flutter/provider/get_story_response_provider.dart';
+import 'package:story_app_flutter/provider/home_provider.dart';
+import 'package:story_app_flutter/provider/upload_provider.dart';
 import 'package:story_app_flutter/routes/router_delegate.dart';
 import 'package:http/http.dart' as http;
 
@@ -42,22 +44,18 @@ class _StoryAppState extends State<StoryApp> {
 
   @override
   Widget build(BuildContext context) {
-    return
-    //   MultiProvider(
-    //   providers: [
-    //     ChangeNotifierProvider(create: (context) => authProvider),
-    //   ],
-    //   child: MaterialApp(
-    //     title: 'Story App',
-    //     home: Router(
-    //       routerDelegate: myRouterDelegate,
-    //       backButtonDispatcher: RootBackButtonDispatcher(),
-    //     ),
-    //   ),
-    // );
-
-    ChangeNotifierProvider(
-      create: (context) => authProvider,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => authProvider),
+        ChangeNotifierProvider(
+          create: (context) => HomeProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => UploadProvider(
+            ApiService(),
+          ),
+        ),
+      ],
       child: MaterialApp(
         title: 'Story App',
         home: Router(
@@ -66,5 +64,39 @@ class _StoryAppState extends State<StoryApp> {
         ),
       ),
     );
+
+    // ChangeNotifierProvider(
+    //   create: (context) => authProvider,
+    //   child: MaterialApp(
+    //     title: 'Story App',
+    //     home: Router(
+    //       routerDelegate: myRouterDelegate,
+    //       backButtonDispatcher: RootBackButtonDispatcher(),
+    //     ),
+    //   ),
+    // );
   }
 }
+
+// Contoh dari dicoding
+//
+// void main() {
+//   /// todo-03-upload-06: inject a UploadProvider to main widget
+//   runApp(
+//     MultiProvider(
+//       providers: [
+//         ChangeNotifierProvider(
+//           create: (context) => HomeProvider(),
+//         ),
+//         ChangeNotifierProvider(
+//           create: (context) => UploadProvider(
+//             ApiService(),
+//           ),
+//         ),
+//       ],
+//       child: const MaterialApp(
+//         home: HomePage(),
+//       ),
+//     ),
+//   );
+// }

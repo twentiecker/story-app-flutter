@@ -5,8 +5,11 @@ import 'package:story_app_flutter/provider/get_story_response_provider.dart';
 import 'package:story_app_flutter/utils/color_theme.dart';
 import 'package:story_app_flutter/widget/card_widget.dart';
 
+import '../api/api_service.dart';
 import '../model/quote.dart';
 import '../provider/auth_provider.dart';
+import '../provider/home_provider.dart';
+import '../provider/upload_provider.dart';
 import '../utils/result_state.dart';
 import '../widget/state_widget.dart';
 
@@ -14,12 +17,14 @@ class QuotesListScreen extends StatelessWidget {
   final List<ListStory> quotes;
   final Function(String) onTapped;
   final Function() onLogout;
+  final Function() onAddStory;
 
   const QuotesListScreen({
     Key? key,
     required this.quotes,
     required this.onTapped,
     required this.onLogout,
+    required this.onAddStory,
   }) : super(key: key);
 
   @override
@@ -44,11 +49,14 @@ class QuotesListScreen extends StatelessWidget {
                 children: [
                   Text(
                     'Stories',
-                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineSmall!
+                        .copyWith(
                         color: lightGreen, fontWeight: FontWeight.w500),
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () => onAddStory(),
                     child: Row(
                       children: [
                         Text('Add story',
@@ -135,7 +143,7 @@ class QuotesListScreen extends StatelessWidget {
                 child: Column(
                   children: quotes
                       .map((story) =>
-                          CardWidget(story: story, onTapped: onTapped))
+                      CardWidget(story: story, onTapped: onTapped))
                       .toList(),
                 ),
               ),
@@ -190,8 +198,8 @@ class QuotesListScreen extends StatelessWidget {
         tooltip: "Logout",
         child: authWatch.isLoadingLogout
             ? const CircularProgressIndicator(
-                color: Colors.white,
-              )
+          color: Colors.white,
+        )
             : const Icon(Icons.logout),
       ),
     );

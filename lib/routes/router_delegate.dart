@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:story_app_flutter/api/api_service.dart';
 import 'package:story_app_flutter/model/get_story_response.dart';
+import 'package:story_app_flutter/screen/home_screen.dart';
 import 'package:story_app_flutter/utils/color_theme.dart';
 
 import '../db/auth_repository.dart';
@@ -41,6 +42,7 @@ class MyRouterDelegate extends RouterDelegate
   List<Page> historyStack = [];
   bool? isLoggedIn;
   bool isRegister = false;
+  bool isAddStory = false;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +65,8 @@ class MyRouterDelegate extends RouterDelegate
           return false;
         }
 
+        isAddStory = false;
+        print('isAddStory di onPop: $isAddStory');
         isRegister = false;
         selectedQuote = null;
         notifyListeners();
@@ -128,7 +132,9 @@ class MyRouterDelegate extends RouterDelegate
                   return Scaffold(
                     backgroundColor: grey,
                     body: Center(
-                      child: CircularProgressIndicator(color: white,),
+                      child: CircularProgressIndicator(
+                        color: white,
+                      ),
                     ),
                   );
                 } else if (state.state == ResultState.hasData) {
@@ -143,6 +149,11 @@ class MyRouterDelegate extends RouterDelegate
                     /// create a logout button
                     onLogout: () {
                       isLoggedIn = false;
+                      notifyListeners();
+                    },
+                    onAddStory: () {
+                      isAddStory = true;
+                      print('isAddStory setelah diteken add story: $isAddStory');
                       notifyListeners();
                     },
                   );
@@ -184,6 +195,11 @@ class MyRouterDelegate extends RouterDelegate
             child: QuoteDetailsScreen(
               quoteId: selectedQuote!,
             ),
+          ),
+        if (isAddStory == true)
+          MaterialPage(
+            key: const ValueKey("HomePage"),
+            child: HomePage(),
           ),
       ];
 }

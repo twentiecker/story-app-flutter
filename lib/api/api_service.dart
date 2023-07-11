@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 
 import '../model/detail_story_response.dart';
 import '../model/get_story_response.dart';
+import '../model/upload_response.dart';
 
 class ApiService {
   static const String _baseUrl = 'https://story-api.dicoding.dev/v1';
@@ -87,13 +88,55 @@ class ApiService {
     }
   }
 
-  Future<AddStoryResponse> addStoryResponse(
-    List<int> bytes,
-    String token,
-    String fileName,
-    String description,
-  ) async {
-    final uri = Uri.parse('$_baseUrl/stories');
+  // Future<AddStoryResponse> addStoryResponse(
+  //   List<int> bytes,
+  //   String fileName,
+  //   String description,
+  // ) async {
+  //   final uri = Uri.parse('$_baseUrl/stories');
+  //   var request = http.MultipartRequest('POST', uri);
+  //
+  //   final multiPartFile = http.MultipartFile.fromBytes(
+  //     "photo",
+  //     bytes,
+  //     filename: fileName,
+  //   );
+  //   final Map<String, String> fields = {
+  //     "description": description,
+  //   };
+  //   final Map<String, String> headers = {
+  //     "Content-type": "multipart/form-data",
+  //     "Authorization": "Bearer <token>"
+  //   };
+  //
+  //   request.files.add(multiPartFile);
+  //   request.fields.addAll(fields);
+  //   request.headers.addAll(headers);
+  //
+  //   final http.StreamedResponse streamedResponse = await request.send();
+  //   final int statusCode = streamedResponse.statusCode;
+  //
+  //   final Uint8List responseList = await streamedResponse.stream.toBytes();
+  //   final String responseData = String.fromCharCodes(responseList);
+  //
+  //   if (statusCode == 201) {
+  //     final AddStoryResponse response = AddStoryResponse.fromRawJson(
+  //       responseData,
+  //     );
+  //     return response;
+  //   } else {
+  //     throw Exception("Add story error");
+  //   }
+  // }
+
+  Future<UploadResponse> uploadDocument(
+      List<int> bytes,
+      String fileName,
+      String description,
+      ) async {
+    const String url = "https://story-api.dicoding.dev/v1/stories";
+
+    final uri = Uri.parse(url);
     var request = http.MultipartRequest('POST', uri);
 
     final multiPartFile = http.MultipartFile.fromBytes(
@@ -106,7 +149,7 @@ class ApiService {
     };
     final Map<String, String> headers = {
       "Content-type": "multipart/form-data",
-      "Authorization": "Bearer $token"
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLXJPazR3NTBJXzk4UXkyYTYiLCJpYXQiOjE2ODkwNTUzMjB9.aG2ZJWr8bfQ3eyInY8W-C6SaBHTFH4pbR3ebqCm1s90"
     };
 
     request.files.add(multiPartFile);
@@ -120,12 +163,12 @@ class ApiService {
     final String responseData = String.fromCharCodes(responseList);
 
     if (statusCode == 201) {
-      final AddStoryResponse response = AddStoryResponse.fromRawJson(
+      final UploadResponse uploadResponse = UploadResponse.fromJson(
         responseData,
       );
-      return response;
+      return uploadResponse;
     } else {
-      throw Exception("Add story error");
+      throw Exception("Upload file error");
     }
   }
 }

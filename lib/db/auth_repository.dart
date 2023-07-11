@@ -40,6 +40,7 @@ class AuthRepository {
   Future<String> getToken() async {
     final preferences = await SharedPreferences.getInstance();
     final token = preferences.getString(userKey) ?? "";
+    print(token);
     return token;
   }
 
