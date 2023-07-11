@@ -332,9 +332,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           //         color: Colors.grey
                           //     ),
                           //     child: Image.asset('images/facebook.png', scale: 2,)),
-                          Image.asset('images/facebook.png', scale: 2),
-                          Image.asset('images/google.png', scale: 2),
-                          Image.asset('images/twitter.png')
+                          Image.asset('images/facebook.png', scale: 1.5),
+                          Image.asset('images/google.png', scale: 1.5),
+                          Image.asset('images/twitter.png', scale: 1.5)
                         ],
                       ),
                       SizedBox(height: 20)

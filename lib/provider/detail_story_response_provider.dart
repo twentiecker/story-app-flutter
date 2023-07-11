@@ -21,14 +21,15 @@ class DetailStoryResponseProvider extends ChangeNotifier {
       error: true,
       message: 'message',
       story: Story(
-          id: 'Loading...',
-          name: 'Loading...',
-          description: 'Loading...',
-          photoUrl: 'Loading...',
+          id: '',
+          name: '',
+          description: '',
+          photoUrl: '',
           createdAt: DateTime.parse('0000-00-00'),
           lat: 0.0,
           lon: 0.0),
     );
+    _state = ResultState.loading;
   }
 
   late DetailStoryResponse _detailStoryResponse;

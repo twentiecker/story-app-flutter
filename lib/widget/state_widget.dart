@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../utils/color_theme.dart';
+
 class StateWidget extends StatelessWidget {
   final IconData icon;
   final String message;
@@ -21,9 +23,10 @@ class StateWidget extends StatelessWidget {
         Icon(
           icon,
           size: ratio * 100,
+          color: white,
         ),
         SizedBox(height: ratio * 5),
-        Text('$message!'),
+        Text('$message!', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: white),),
       ],
     );
   }

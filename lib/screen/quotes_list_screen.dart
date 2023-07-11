@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:story_app_flutter/model/get_story_response.dart';
 import 'package:story_app_flutter/provider/get_story_response_provider.dart';
+import 'package:story_app_flutter/utils/color_theme.dart';
 import 'package:story_app_flutter/widget/card_widget.dart';
 
 import '../model/quote.dart';
@@ -28,14 +29,118 @@ class QuotesListScreen extends StatelessWidget {
     //     (screenSize.width / screenSize.height) / (423.529419 / 803.137269);
     final authWatch = context.watch<AuthProvider>();
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Story App"),
-      ),
-      body: SingleChildScrollView(
+      // appBar: AppBar(
+      //   title: const Text("Story App"),
+      // ),
+      backgroundColor: grey,
+      body: SafeArea(
         child: Column(
-          children: quotes
-              .map((story) => CardWidget(story: story, onTapped: onTapped))
-              .toList(),
+          children: [
+            SizedBox(height: 30),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Stories',
+                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                        color: lightGreen, fontWeight: FontWeight.w500),
+                  ),
+                  InkWell(
+                    onTap: () {},
+                    child: Row(
+                      children: [
+                        Text('Add story',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(color: white)),
+                        SizedBox(width: 5),
+                        Icon(
+                          Icons.add_box_outlined,
+                          color: white,
+                          size: 20,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(height: 20),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 13),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.perm_contact_cal_rounded,
+                      color: Colors.grey,
+                      size: 80,
+                    ),
+                    Icon(
+                      Icons.perm_contact_cal_rounded,
+                      color: lightGreen,
+                      size: 80,
+                    ),
+                    Icon(
+                      Icons.perm_contact_cal_rounded,
+                      color: Colors.grey,
+                      size: 80,
+                    ),
+                    Icon(
+                      Icons.perm_contact_cal_rounded,
+                      color: Colors.grey,
+                      size: 80,
+                    ),
+                    Icon(
+                      Icons.perm_contact_cal_rounded,
+                      color: Colors.grey,
+                      size: 80,
+                    ),
+                    Icon(
+                      Icons.perm_contact_cal_rounded,
+                      color: Colors.grey,
+                      size: 80,
+                    ),
+                    Icon(
+                      Icons.perm_contact_cal_rounded,
+                      color: Colors.grey,
+                      size: 80,
+                    ),
+                    Icon(
+                      Icons.perm_contact_cal_rounded,
+                      color: Colors.grey,
+                      size: 80,
+                    ),
+                    Icon(
+                      Icons.perm_contact_cal_rounded,
+                      color: Colors.grey,
+                      size: 80,
+                    ),
+                    Icon(
+                      Icons.perm_contact_cal_rounded,
+                      color: Colors.grey,
+                      size: 80,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 15),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: quotes
+                      .map((story) =>
+                          CardWidget(story: story, onTapped: onTapped))
+                      .toList(),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       // Consumer<GetStoryResponseProvider>(builder: (context, state, _) {
@@ -81,6 +186,7 @@ class QuotesListScreen extends StatelessWidget {
           final result = await authRead.logout();
           if (result) onLogout();
         },
+        backgroundColor: green,
         tooltip: "Logout",
         child: authWatch.isLoadingLogout
             ? const CircularProgressIndicator(

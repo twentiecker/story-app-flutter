@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:story_app_flutter/api/api_service.dart';
 import 'package:story_app_flutter/model/get_story_response.dart';
+import 'package:story_app_flutter/utils/color_theme.dart';
 
 import '../db/auth_repository.dart';
 import '../model/quote.dart';
@@ -125,9 +126,9 @@ class MyRouterDelegate extends RouterDelegate
               builder: (context, state, _) {
                 if (state.state == ResultState.loading) {
                   return Scaffold(
-                    appBar: AppBar(),
+                    backgroundColor: grey,
                     body: Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator(color: white,),
                     ),
                   );
                 } else if (state.state == ResultState.hasData) {
@@ -147,7 +148,7 @@ class MyRouterDelegate extends RouterDelegate
                   );
                 } else if (state.state == ResultState.noData) {
                   return Scaffold(
-                    appBar: AppBar(),
+                    backgroundColor: grey,
                     body: Center(
                       child: StateWidget(
                         icon: Icons.not_interested_rounded,
@@ -157,7 +158,7 @@ class MyRouterDelegate extends RouterDelegate
                   );
                 } else if (state.state == ResultState.error) {
                   return Scaffold(
-                    appBar: AppBar(),
+                    backgroundColor: grey,
                     body: Center(
                       child: StateWidget(
                         icon: Icons.signal_wifi_connected_no_internet_4_rounded,
@@ -167,7 +168,7 @@ class MyRouterDelegate extends RouterDelegate
                   );
                 } else {
                   return Scaffold(
-                    appBar: AppBar(),
+                    backgroundColor: grey,
                     body: const Center(
                       child: Text(''),
                     ),
