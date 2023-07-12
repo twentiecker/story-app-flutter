@@ -130,6 +130,7 @@ class ApiService {
   // }
 
   Future<UploadResponse> uploadDocument(
+      String token,
       List<int> bytes,
       String fileName,
       String description,
@@ -149,7 +150,7 @@ class ApiService {
     };
     final Map<String, String> headers = {
       "Content-type": "multipart/form-data",
-      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLXJPazR3NTBJXzk4UXkyYTYiLCJpYXQiOjE2ODkwNTUzMjB9.aG2ZJWr8bfQ3eyInY8W-C6SaBHTFH4pbR3ebqCm1s90"
+      "Authorization": "Bearer $token"
     };
 
     request.files.add(multiPartFile);

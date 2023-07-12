@@ -18,6 +18,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final descController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    descController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +34,11 @@ class _HomePageState extends State<HomePage> {
         title: const Text("Camera Project"),
         actions: [
           IconButton(
-            onPressed: () => _onUpload(),
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                _onUpload(descController.text);
+              }
+            },
 
             /// todo-04-after-01: update the widget
             icon: context.watch<UploadProvider>().isUploading
@@ -53,6 +66,18 @@ class _HomePageState extends State<HomePage> {
                     )
                   : _showImage(),
             ),
+            Form(
+              key: formKey,
+              child: TextFormField(
+                controller: descController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter description.';
+                  }
+                  return null;
+                },
+              ),
+            ),
             Expanded(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -79,7 +104,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _onUpload() async {
+  _onUpload(String desc) async {
     final ScaffoldMessengerState scaffoldMessengerState =
         ScaffoldMessenger.of(context);
     final uploadProvider = context.read<UploadProvider>();
@@ -103,7 +128,7 @@ class _HomePageState extends State<HomePage> {
       newBytes,
       // bytes,
       fileName,
-      "Ini adalah deskripsi gambar dari twentiecker",
+      desc,
     );
 
     /// todo-04-after-02: remove the image

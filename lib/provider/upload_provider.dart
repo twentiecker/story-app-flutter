@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 
 import '../api/api_service.dart';
+import '../db/auth_repository.dart';
 import '../model/upload_response.dart';
 
 /// todo-03-upload-03: create UploadProvider file
@@ -27,8 +28,11 @@ class UploadProvider extends ChangeNotifier {
       isUploading = true;
       notifyListeners();
 
+      final String token = await AuthRepository().getToken();
+      print(token);
+
       uploadResponse =
-          await apiService.uploadDocument(bytes, fileName, description);
+          await apiService.uploadDocument(token, bytes, fileName, description);
       message = uploadResponse?.message ?? "success";
       isUploading = false;
       notifyListeners();
