@@ -80,7 +80,6 @@ class QuoteDetailsScreen extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(width: screenSize.width * 0.02),
-                                // SizedBox(width: 10),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
