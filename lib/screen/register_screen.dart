@@ -7,6 +7,8 @@ import '../api/api_service.dart';
 import '../model/register_response.dart';
 import '../provider/auth_provider.dart';
 import '../utils/color_theme.dart';
+import '../utils/style_theme.dart';
+import '../widget/social_widget.dart';
 
 class RegisterScreen extends StatefulWidget {
   final Function() onRegister;
@@ -39,49 +41,53 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final ratio = screenSize.height / 803.137269;
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text("Register Screen"),
-      // ),
       backgroundColor: grey,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 70),
+            SizedBox(height: screenSize.height * 0.08),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   'story',
-                  style: Theme.of(context)
-                      .textTheme
-                      .displaySmall!
-                      .copyWith(color: white, fontWeight: FontWeight.bold),
+                  style: displaySmall(
+                    context,
+                    ratio,
+                    white,
+                  ),
                 ),
                 Text(
                   'app',
-                  style: Theme.of(context)
-                      .textTheme
-                      .displaySmall!
-                      .copyWith(color: lightGreen, fontWeight: FontWeight.bold),
+                  style: displaySmall(
+                    context,
+                    ratio,
+                    lightGreen,
+                  ),
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            SizedBox(height: screenSize.height * 0.03),
             ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 250),
-                child: Text(
-                  'Please enter your e-mail address and create password',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium!
-                      .copyWith(color: white),
-                  textAlign: TextAlign.center,
-                )),
-            SizedBox(height: 40),
+              constraints: BoxConstraints(maxWidth: screenSize.width * 0.6),
+              child: Text(
+                'Please enter your e-mail address and create password',
+                style: titleMedium(
+                  context,
+                  ratio,
+                  white,
+                  null,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            SizedBox(height: screenSize.height * 0.05),
             Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 300),
+                constraints: BoxConstraints(maxWidth: screenSize.width * 0.7),
                 child: Form(
                   key: formKey,
                   child: Column(
@@ -97,26 +103,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           return null;
                         },
                         decoration: InputDecoration(
-                            hintText: "Full Name",
-                            hintStyle: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .copyWith(color: Colors.grey),
-                            prefixIcon: Icon(
-                              Icons.account_circle_outlined,
-                              color: lightGreen,
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: white)),
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: lightGreen))),
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium!
-                            .copyWith(color: white),
+                          hintText: "Full Name",
+                          hintStyle: titleMedium(
+                            context,
+                            ratio,
+                            Colors.grey,
+                            null,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.account_circle_outlined,
+                            color: lightGreen,
+                            size: ratio * 24,
+                          ),
+                          enabledBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: white),
+                          ),
+                          focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: lightGreen),
+                          ),
+                        ),
+                        style: titleMedium(
+                          context,
+                          ratio,
+                          white,
+                          null,
+                        ),
                         cursorColor: white,
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenSize.height * 0.03),
                       TextFormField(
                         controller: emailController,
                         validator: (value) {
@@ -128,47 +142,63 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           return null;
                         },
                         decoration: InputDecoration(
-                            hintText: "Enter your email",
-                            hintStyle: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .copyWith(color: Colors.grey),
-                            prefixIcon: Icon(
-                              Icons.email_outlined,
-                              color: lightGreen,
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: white)),
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: lightGreen))),
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium!
-                            .copyWith(color: white),
+                          hintText: "Enter your email",
+                          hintStyle: titleMedium(
+                            context,
+                            ratio,
+                            Colors.grey,
+                            null,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.email_outlined,
+                            color: lightGreen,
+                            size: ratio * 24,
+                          ),
+                          enabledBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: white),
+                          ),
+                          focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: lightGreen),
+                          ),
+                        ),
+                        style: titleMedium(
+                          context,
+                          ratio,
+                          white,
+                          null,
+                        ),
                         cursorColor: white,
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenSize.height * 0.03),
                       TextFormField(
                         controller: passwordController,
                         obscureText: true,
                         decoration: InputDecoration(
-                            hintText: "Enter your password",
-                            hintStyle: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .copyWith(color: Colors.grey),
-                            prefixIcon: Icon(
-                              Icons.lock_outline,
-                              color: lightGreen,
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: white)),
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: lightGreen))),
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium!
-                            .copyWith(color: white),
+                          hintText: "Enter your password",
+                          hintStyle: titleMedium(
+                            context,
+                            ratio,
+                            Colors.grey,
+                            null,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.lock_outline,
+                            color: lightGreen,
+                            size: ratio * 24,
+                          ),
+                          enabledBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: white),
+                          ),
+                          focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: lightGreen),
+                          ),
+                        ),
+                        style: titleMedium(
+                          context,
+                          ratio,
+                          white,
+                          null,
+                        ),
                         cursorColor: white,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -179,22 +209,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 132),
+                      SizedBox(height: screenSize.height * 0.16),
                       context.watch<AuthProvider>().isLoadingRegister
                           ? ElevatedButton(
                               onPressed: () {},
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: green,
-                                  minimumSize: Size(300, 60),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30))),
+                                backgroundColor: green,
+                                minimumSize: Size(
+                                  screenSize.width * 0.07,
+                                  screenSize.height * 0.08,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
                               child: const Center(
-                                  child: CircularProgressIndicator(color: white)))
+                                child: CircularProgressIndicator(color: white),
+                              ),
+                            )
                           : ElevatedButton(
                               onPressed: () async {
                                 if (formKey.currentState!.validate()) {
                                   final scaffoldMessenger =
-                                  ScaffoldMessenger.of(context);
+                                      ScaffoldMessenger.of(context);
                                   final authRead = context.read<AuthProvider>();
                                   authRead.registerState(true);
 
@@ -206,138 +243,143 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     passwordController.text,
                                   );
 
-                                  registerResponse.then((value) async {
-                                    if (value.error) {
-                                      authRead.registerState(false);
-                                      scaffoldMessenger.showSnackBar(
-                                        SnackBar(
-                                          behavior: SnackBarBehavior.floating,
-                                          backgroundColor: green,
-                                          content: Text(
-                                            value.message,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium!
-                                                .copyWith(color: white),
+                                  registerResponse.then(
+                                    (value) async {
+                                      if (value.error) {
+                                        authRead.registerState(false);
+                                        scaffoldMessenger.showSnackBar(
+                                          SnackBar(
+                                            behavior: SnackBarBehavior.floating,
+                                            backgroundColor: green,
+                                            content: Text(
+                                              value.message,
+                                              style: titleMedium(
+                                                context,
+                                                ratio,
+                                                white,
+                                                null,
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    } else {
-                                      scaffoldMessenger.showSnackBar(
-                                        SnackBar(
-                                          behavior: SnackBarBehavior.floating,
-                                          backgroundColor: green,
-                                          content: Text(
-                                            value.message,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium!
-                                                .copyWith(color: white),
+                                        );
+                                      } else {
+                                        scaffoldMessenger.showSnackBar(
+                                          SnackBar(
+                                            behavior: SnackBarBehavior.floating,
+                                            backgroundColor: green,
+                                            content: Text(
+                                              value.message,
+                                              style: titleMedium(
+                                                context,
+                                                ratio,
+                                                white,
+                                                null,
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                      final result =
-                                          await authRead.registerComplete();
-                                      if (result) widget.onRegister();
-                                    }
-                                  });
+                                        );
+                                        final result =
+                                            await authRead.registerComplete();
+                                        if (result) widget.onRegister();
+                                      }
+                                    },
+                                  );
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: green,
-                                  minimumSize: Size(300, 60),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30))),
+                                backgroundColor: green,
+                                minimumSize: Size(
+                                  screenSize.width * 0.07,
+                                  screenSize.height * 0.08,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
                               child: Text(
                                 "Sign Up",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .copyWith(
-                                        color: white,
-                                        fontWeight: FontWeight.bold),
+                                style: titleMedium(
+                                  context,
+                                  ratio,
+                                  white,
+                                  FontWeight.bold,
+                                ),
                               ),
                             ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenSize.height * 0.02),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             "Already have an account? ",
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .copyWith(color: white),
+                            style: titleMedium(
+                              context,
+                              ratio,
+                              white,
+                              null,
+                            ),
                           ),
                           InkWell(
                               onTap: () => widget.onLogin(),
                               child: Text(
                                 "Login",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .copyWith(
-                                        color: lightGreen,
-                                        fontWeight: FontWeight.bold),
+                                style: titleMedium(
+                                  context,
+                                  ratio,
+                                  lightGreen,
+                                  FontWeight.bold,
+                                ),
                               ))
                         ],
                       ),
-                      // const SizedBox(height: 8),
-                      // OutlinedButton(
-                      //   onPressed: () => widget.onLogin(),
-                      //   child: const Text("LOGIN"),
-                      // ),
-                      SizedBox(height: 40),
-                      Stack(alignment: Alignment.center, children: [
-                        SizedBox(
-                          height: 1,
-                          width: 300,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(color: white),
+                      SizedBox(height: screenSize.height * 0.05),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          SizedBox(
+                            height: 1,
+                            width: screenSize.width * 0.7,
+                            child: const DecoratedBox(
+                              decoration: BoxDecoration(color: white),
+                            ),
                           ),
-                        ),
-                        Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            decoration: BoxDecoration(color: grey),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            decoration: const BoxDecoration(color: grey),
                             child: Text(
                               'Sign up with',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(color: white),
-                            )),
-                      ]),
-                      SizedBox(height: 20),
+                              style: titleMedium(
+                                context,
+                                ratio,
+                                white,
+                                null,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: screenSize.height * 0.03),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          // Container(
-                          //   padding: EdgeInsets.all(10),
-                          //   decoration: BoxDecoration(
-                          //     shape: BoxShape.circle,
-                          //     color: Colors.grey
-                          //   ),
-                          //     child: Image.asset('images/facebook.png', scale: 2,)),
-                          // Container(
-                          //     padding: EdgeInsets.all(10),
-                          //     decoration: BoxDecoration(
-                          //         shape: BoxShape.circle,
-                          //         color: Colors.grey
-                          //     ),
-                          //     child: Image.asset('images/facebook.png', scale: 2,)),
-                          // Container(
-                          //     padding: EdgeInsets.all(10),
-                          //     decoration: BoxDecoration(
-                          //         shape: BoxShape.circle,
-                          //         color: Colors.grey
-                          //     ),
-                          //     child: Image.asset('images/facebook.png', scale: 2,)),
-                          Image.asset('images/facebook.png', scale: 1.5),
-                          Image.asset('images/google.png', scale: 1.5),
-                          Image.asset('images/twitter.png', scale: 1.5)
+                          SocialWidget(
+                            'images/facebook.png',
+                            ratio,
+                            screenSize.height,
+                          ),
+                          SocialWidget(
+                            'images/google.png',
+                            ratio,
+                            screenSize.height,
+                          ),
+                          SocialWidget(
+                            'images/twitter.png',
+                            ratio,
+                            screenSize.height,
+                          ),
                         ],
                       ),
-                      SizedBox(height: 20)
+                      SizedBox(height: screenSize.height * 0.05)
                     ],
                   ),
                 ),
