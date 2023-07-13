@@ -7,8 +7,8 @@ import 'package:story_app_flutter/db/auth_repository.dart';
 import 'package:story_app_flutter/provider/detail_story_response_provider.dart';
 import 'package:story_app_flutter/utils/color_theme.dart';
 
-import '../model/quote.dart';
 import '../utils/result_state.dart';
+import '../utils/style_theme.dart';
 import '../widget/state_widget.dart';
 
 class QuoteDetailsScreen extends StatelessWidget {
@@ -21,63 +21,86 @@ class QuoteDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final quote = quotes.singleWhere((element) => element.id == quoteId);
+    final Size screenSize = MediaQuery.of(context).size;
+    final ratio = screenSize.height / 803.137269;
     return ChangeNotifierProvider(
       create: (BuildContext context) => DetailStoryResponseProvider(
-          apiService: ApiService(),
-          authRepository: AuthRepository(),
-          id: quoteId),
+        apiService: ApiService(),
+        authRepository: AuthRepository(),
+        id: quoteId,
+      ),
       child: Consumer<DetailStoryResponseProvider>(
         builder: (context, state, _) {
           if (state.state == ResultState.loading) {
-            return Scaffold(
+            return const Scaffold(
               backgroundColor: grey,
               body: Center(
-                child: CircularProgressIndicator(color: white,),
+                child: CircularProgressIndicator(color: white),
               ),
             );
           } else if (state.state == ResultState.hasData) {
             return Scaffold(
-              // appBar: AppBar(
-              //   title: Text(state.result.story.name),
-              // ),
               backgroundColor: grey,
               body: SafeArea(
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      SizedBox(height: screenSize.height * 0.04),
                       Padding(
-                        padding: const EdgeInsets.all(20),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Row(
                               children: [
-                                Icon(
-                                  Icons.perm_contact_cal_rounded,
-                                  color: lightGreen,
-                                  size: 50,
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Icon(
+                                    Icons.arrow_back_ios_new,
+                                    color: white,
+                                    size: ratio * 24,
+                                  ),
                                 ),
-                                SizedBox(width: 5),
+                                SizedBox(width: screenSize.width * 0.02),
+                                ClipOval(
+                                  child: CachedNetworkImage(
+                                    imageUrl: state.result.story.photoUrl,
+                                    width: ratio * 50,
+                                    height: ratio * 50,
+                                    progressIndicatorBuilder:
+                                        (context, url, progress) =>
+                                            CircularProgressIndicator(
+                                      value: progress.progress,
+                                      color: white,
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                SizedBox(width: screenSize.width * 0.02),
+                                // SizedBox(width: 10),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       state.result.story.name,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(color: white),
+                                      style: titleMedium(
+                                        context,
+                                        ratio,
+                                        white,
+                                        null,
+                                      ),
                                     ),
-                                    SizedBox(height: 2),
+                                    SizedBox(height: screenSize.height * 0.002),
                                     Text(
-                                      Jiffy.parse(state.result.story.createdAt.toLocal().toString())
+                                      Jiffy.parse(state.result.story.createdAt
+                                              .toLocal()
+                                              .toString())
                                           .fromNow(),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(color: Colors.grey),
+                                      style: bodyMedium(
+                                          context, ratio, Colors.grey),
                                     )
                                   ],
                                 ),
@@ -88,100 +111,113 @@ class QuoteDetailsScreen extends StatelessWidget {
                                 Icon(
                                   Icons.circle_rounded,
                                   color: white,
-                                  size: 5,
+                                  size: ratio * 5,
                                 ),
-                                SizedBox(height: 2),
+                                SizedBox(height: screenSize.height * 0.002),
                                 Icon(
                                   Icons.circle_rounded,
                                   color: white,
-                                  size: 5,
+                                  size: ratio * 5,
                                 ),
-                                SizedBox(height: 2),
+                                SizedBox(height: screenSize.height * 0.002),
                                 Icon(
                                   Icons.circle_rounded,
                                   color: white,
-                                  size: 5,
+                                  size: ratio * 5,
                                 ),
                               ],
                             )
                           ],
                         ),
                       ),
+                      SizedBox(height: screenSize.height * 0.03),
                       SizedBox(
-                        height: 400,
+                        height: screenSize.height * 0.31,
                         child: CachedNetworkImage(
                           imageUrl: state.result.story.photoUrl,
                           progressIndicatorBuilder: (context, url, progress) =>
                               Transform.scale(
-                                  scale: 0.3,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 10,
-                                    value: progress.progress,
-                                    color: white,
-                                  )),
+                            scaleX: 0.3,
+                            scaleY: 0.5,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 10,
+                              value: progress.progress,
+                              color: white,
+                            ),
+                          ),
                           fit: BoxFit.cover,
                         ),
                       ),
+                      SizedBox(height: screenSize.height * 0.03),
                       Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.favorite_rounded,
-                                      color: Colors.red,
-                                      size: 20,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text('Like',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(color: white)),
-                                    SizedBox(width: 20),
-                                    Icon(
-                                      Icons.comment_outlined,
-                                      color: white,
-                                      size: 20,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text('Comment',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(color: white)),
-                                  ],
+                                Icon(
+                                  Icons.favorite_rounded,
+                                  color: Colors.red,
+                                  size: ratio * 20,
                                 ),
-                                Row(
-                                  children: [
-                                    Text('Share',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(color: white)),
-                                    SizedBox(width: 5),
-                                    Icon(
-                                      Icons.share_outlined,
-                                      color: white,
-                                      size: 20,
-                                    )
-                                  ],
-                                )
+                                SizedBox(width: screenSize.width * 0.01),
+                                Text(
+                                  'Like',
+                                  style: titleSmall(
+                                    context,
+                                    ratio,
+                                  ),
+                                ),
+                                SizedBox(width: screenSize.width * 0.05),
+                                Icon(
+                                  Icons.comment_outlined,
+                                  color: white,
+                                  size: ratio * 20,
+                                ),
+                                SizedBox(width: screenSize.width * 0.01),
+                                Text(
+                                  'Comment',
+                                  style: titleSmall(
+                                    context,
+                                    ratio,
+                                  ),
+                                ),
                               ],
                             ),
-                            // Text(state.result.story.name, style: Theme.of(context).textTheme.titleLarge!.copyWith(color: white)),
-                            SizedBox(height: 15),
-                            Text(state.result.story.description,
-                                style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: white)),
+                            Row(
+                              children: [
+                                Text(
+                                  'Share',
+                                  style: titleSmall(
+                                    context,
+                                    ratio,
+                                  ),
+                                ),
+                                SizedBox(width: screenSize.width * 0.01),
+                                Icon(
+                                  Icons.share_outlined,
+                                  color: white,
+                                  size: ratio * 20,
+                                )
+                              ],
+                            )
                           ],
                         ),
                       ),
-
+                      SizedBox(height: screenSize.height * 0.03),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          state.result.story.description,
+                          style: bodyMedium(
+                            context,
+                            ratio,
+                            white,
+                          ),
+                          textAlign: TextAlign.justify,
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -198,7 +234,7 @@ class QuoteDetailsScreen extends StatelessWidget {
               ),
             );
           } else if (state.state == ResultState.error) {
-            return Scaffold(
+            return const Scaffold(
               backgroundColor: grey,
               body: Center(
                 child: StateWidget(
@@ -208,9 +244,9 @@ class QuoteDetailsScreen extends StatelessWidget {
               ),
             );
           } else {
-            return Scaffold(
+            return const Scaffold(
               backgroundColor: grey,
-              body: const Center(
+              body: Center(
                 child: Text(''),
               ),
             );

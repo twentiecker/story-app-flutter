@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:provider/provider.dart';
+import 'package:story_app_flutter/utils/style_theme.dart';
 
 import '../model/get_story_response.dart';
 import '../utils/color_theme.dart';
@@ -9,11 +9,15 @@ import '../utils/color_theme.dart';
 class CardWidget extends StatelessWidget {
   final ListStory story;
   final Function(String) onTapped;
+  final Size screenSize;
+  final double ratio;
 
   const CardWidget({
     Key? key,
     required this.story,
     required this.onTapped,
+    required this.screenSize,
+    required this.ratio,
   }) : super(key: key);
 
   @override
@@ -25,7 +29,7 @@ class CardWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(height: 15),
+            SizedBox(height: screenSize.height * 0.02),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -33,30 +37,42 @@ class CardWidget extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(
-                        Icons.account_circle,
-                        color: lightGreen,
-                        size: 50,
+                      ClipOval(
+                        child: CachedNetworkImage(
+                          imageUrl: story.photoUrl,
+                          width: ratio * 50,
+                          height: ratio * 50,
+                          progressIndicatorBuilder: (context, url, progress) =>
+                              CircularProgressIndicator(
+                            value: progress.progress,
+                            color: white,
+                          ),
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                      SizedBox(width: 5),
+                      SizedBox(width: screenSize.width * 0.02),
+                      // SizedBox(width: 10),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             story.name,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .copyWith(color: white),
+                            style: titleMedium(
+                              context,
+                              ratio,
+                              white,
+                              null,
+                            ),
                           ),
-                          SizedBox(height: 2),
+                          SizedBox(height: screenSize.height * 0.002),
                           Text(
                             Jiffy.parse(story.createdAt.toLocal().toString())
                                 .fromNow(),
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(color: Colors.grey),
+                            style: bodyMedium(
+                              context,
+                              ratio,
+                              Colors.grey,
+                            ),
                           )
                         ],
                       ),
@@ -67,43 +83,44 @@ class CardWidget extends StatelessWidget {
                       Icon(
                         Icons.circle_rounded,
                         color: white,
-                        size: 5,
+                        size: ratio * 5,
                       ),
-                      SizedBox(height: 2),
+                      SizedBox(height: screenSize.height * 0.002),
                       Icon(
                         Icons.circle_rounded,
                         color: white,
-                        size: 5,
+                        size: ratio * 5,
                       ),
-                      SizedBox(height: 2),
+                      SizedBox(height: screenSize.height * 0.002),
                       Icon(
                         Icons.circle_rounded,
                         color: white,
-                        size: 5,
+                        size: ratio * 5,
                       ),
                     ],
                   )
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: screenSize.height * 0.03),
             SizedBox(
-              height: 250,
+              height: screenSize.height * 0.31,
               child: CachedNetworkImage(
                 imageUrl: story.photoUrl,
                 progressIndicatorBuilder: (context, url, progress) =>
                     Transform.scale(
-                        scaleX: 0.3,
-                        scaleY: 0.5,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 10,
-                          value: progress.progress,
-                          color: white,
-                        )),
+                  scaleX: 0.3,
+                  scaleY: 0.5,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 10,
+                    value: progress.progress,
+                    color: white,
+                  ),
+                ),
                 fit: BoxFit.cover,
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: screenSize.height * 0.03),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -114,47 +131,53 @@ class CardWidget extends StatelessWidget {
                       Icon(
                         Icons.favorite_rounded,
                         color: Colors.red,
-                        size: 20,
+                        size: ratio * 20,
                       ),
-                      SizedBox(width: 5),
-                      Text('Like',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall!
-                              .copyWith(color: white)),
-                      SizedBox(width: 20),
+                      SizedBox(width: screenSize.width * 0.01),
+                      Text(
+                        'Like',
+                        style: titleSmall(
+                          context,
+                          ratio,
+                        ),
+                      ),
+                      SizedBox(width: screenSize.width * 0.05),
                       Icon(
                         Icons.comment_outlined,
                         color: white,
-                        size: 20,
+                        size: ratio * 20,
                       ),
-                      SizedBox(width: 5),
-                      Text('Comment',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall!
-                              .copyWith(color: white)),
+                      SizedBox(width: screenSize.width * 0.01),
+                      Text(
+                        'Comment',
+                        style: titleSmall(
+                          context,
+                          ratio,
+                        ),
+                      ),
                     ],
                   ),
                   Row(
                     children: [
-                      Text('Share',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall!
-                              .copyWith(color: white)),
-                      SizedBox(width: 5),
+                      Text(
+                        'Share',
+                        style: titleSmall(
+                          context,
+                          ratio,
+                        ),
+                      ),
+                      SizedBox(width: screenSize.width * 0.01),
                       Icon(
                         Icons.share_outlined,
                         color: white,
-                        size: 20,
+                        size: ratio * 20,
                       )
                     ],
                   )
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: screenSize.height * 0.03),
           ],
         ),
       ),

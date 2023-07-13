@@ -66,7 +66,6 @@ class MyRouterDelegate extends RouterDelegate
         }
 
         isAddStory = false;
-        print('isAddStory di onPop: $isAddStory');
         isRegister = false;
         selectedQuote = null;
         notifyListeners();
