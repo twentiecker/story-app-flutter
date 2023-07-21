@@ -363,19 +363,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           SocialWidget(
-                            'images/facebook.png',
-                            ratio,
-                            screenSize.height,
+                            source: 'images/facebook.png',
+                            ratio: ratio,
+                            height: screenSize.height,
                           ),
                           SocialWidget(
-                            'images/google.png',
-                            ratio,
-                            screenSize.height,
+                            source: 'images/google.png',
+                            ratio: ratio,
+                            height: screenSize.height,
                           ),
                           SocialWidget(
-                            'images/twitter.png',
-                            ratio,
-                            screenSize.height,
+                            source: 'images/twitter.png',
+                            ratio: ratio,
+                            height: screenSize.height,
                           ),
                         ],
                       ),

@@ -11,12 +11,14 @@ import '../utils/result_state.dart';
 import '../utils/style_theme.dart';
 import '../widget/state_widget.dart';
 
-class QuoteDetailsScreen extends StatelessWidget {
+class StoryDetailScreen extends StatelessWidget {
   final String quoteId;
+  final Function() onListStory;
 
-  const QuoteDetailsScreen({
+  const StoryDetailScreen({
     Key? key,
     required this.quoteId,
+    required this.onListStory,
   }) : super(key: key);
 
   @override
@@ -55,9 +57,7 @@ class QuoteDetailsScreen extends StatelessWidget {
                             Row(
                               children: [
                                 InkWell(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
+                                  onTap: () => onListStory(),
                                   child: Icon(
                                     Icons.arrow_back_ios_new,
                                     color: white,
@@ -68,8 +68,8 @@ class QuoteDetailsScreen extends StatelessWidget {
                                 ClipOval(
                                   child: CachedNetworkImage(
                                     imageUrl: state.result.story.photoUrl,
-                                    width: ratio * 50,
-                                    height: ratio * 50,
+                                    width: ratio * 40,
+                                    height: ratio * 40,
                                     progressIndicatorBuilder:
                                         (context, url, progress) =>
                                             CircularProgressIndicator(

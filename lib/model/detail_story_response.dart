@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final detailStoryResponse = detailStoryResponseFromJson(jsonString);
-
 import 'dart:convert';
 
 class DetailStoryResponse {

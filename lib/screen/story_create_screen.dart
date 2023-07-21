@@ -1,26 +1,34 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:story_app_flutter/utils/color_theme.dart';
 
-import '../provider/home_provider.dart';
-import '../provider/upload_provider.dart';
+import '../provider/add_story_image_provider.dart';
+import '../provider/add_story_provider.dart';
 import '../utils/style_theme.dart';
-import 'camera_screen.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class StoryCreateScreen extends StatefulWidget {
+  final Function() onListStory;
+  final Function(List<CameraDescription>) onCamera;
+
+  const StoryCreateScreen({
+    super.key,
+    required this.onListStory,
+    required this.onCamera,
+  });
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<StoryCreateScreen> createState() => _StoryCreateScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _StoryCreateScreenState extends State<StoryCreateScreen> {
   final descController = TextEditingController();
+
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -49,9 +57,7 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       children: [
                         InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
+                          onTap: () => widget.onListStory(),
                           child: Icon(
                             Icons.arrow_back_ios_new,
                             color: white,
@@ -60,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         SizedBox(width: screenSize.width * 0.04),
                         Text(
-                          'Create Stories',
+                          'Create',
                           style: headlineSmall(
                             context,
                             ratio,
@@ -69,15 +75,14 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
                         if (formKey.currentState!.validate()) {
-                          _onUpload(descController.text, ratio);
+                          await _onUpload(descController.text, ratio);
+                          widget.onListStory();
                         }
                       },
-                      child: context.watch<UploadProvider>().isUploading
-                          ? const CircularProgressIndicator(
-                              color: Colors.white,
-                            )
+                      child: context.watch<AddStoryProvider>().isUploading
+                          ? const CircularProgressIndicator(color: white)
                           : Row(
                               children: [
                                 Text(
@@ -103,23 +108,38 @@ class _HomePageState extends State<HomePage> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 height: screenSize.height * 0.45,
-                child: context.watch<HomeProvider>().imagePath == null
-                    ? Align(
-                        alignment: Alignment.center,
-                        child: Icon(
-                          Icons.image,
-                          size: screenSize.height * 0.2,
-                          color: Colors.grey,
+                child: context.watch<AddStoryImageProvider>().imagePath == null
+                    ? DottedBorder(
+                        borderType: BorderType.RRect,
+                        radius: const Radius.circular(12),
+                        color: Colors.grey,
+                        dashPattern: const [15, 6],
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            color: lightGrey,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Icons.image,
+                                size: screenSize.height * 0.2,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
                         ),
                       )
                     : _showImage(),
               ),
-              SizedBox(height: screenSize.height * 0.03),
+              SizedBox(height: screenSize.height * 0.04),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Form(
                   key: formKey,
                   child: TextFormField(
+                    onChanged: (text) {
+                      _onDescription(text);
+                    },
                     decoration: InputDecoration(
                       hintText: "Enter your description",
                       hintStyle: titleMedium(
@@ -226,9 +246,9 @@ class _HomePageState extends State<HomePage> {
   _onUpload(String desc, double ratio) async {
     final ScaffoldMessengerState scaffoldMessengerState =
         ScaffoldMessenger.of(context);
-    final uploadProvider = context.read<UploadProvider>();
+    final uploadProvider = context.read<AddStoryProvider>();
 
-    final homeProvider = context.read<HomeProvider>();
+    final homeProvider = context.read<AddStoryImageProvider>();
     final imagePath = homeProvider.imagePath;
     final imageFile = homeProvider.imageFile;
     if (imagePath == null || imageFile == null) {
@@ -259,7 +279,7 @@ class _HomePageState extends State<HomePage> {
       desc,
     );
 
-    if (uploadProvider.uploadResponse != null) {
+    if (uploadProvider.addStoryResponse != null) {
       homeProvider.setImageFile(null);
       homeProvider.setImagePath(null);
     }
@@ -281,8 +301,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  _onDescription(String value) {
+    final provider = context.read<AddStoryImageProvider>();
+    provider.setDescription(value);
+  }
+
   _onGalleryView() async {
-    final provider = context.read<HomeProvider>();
+    final provider = context.read<AddStoryImageProvider>();
 
     final isMacOS = defaultTargetPlatform == TargetPlatform.macOS;
     final isLinux = defaultTargetPlatform == TargetPlatform.linux;
@@ -301,7 +326,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   _onCameraView() async {
-    final provider = context.read<HomeProvider>();
+    final provider = context.read<AddStoryImageProvider>();
 
     final isAndroid = defaultTargetPlatform == TargetPlatform.android;
     final isiOS = defaultTargetPlatform == TargetPlatform.iOS;
@@ -321,8 +346,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   _onCustomCameraView() async {
-    final provider = context.read<HomeProvider>();
-    final navigator = Navigator.of(context);
+    final provider = context.read<AddStoryImageProvider>();
 
     final isMacOS = defaultTargetPlatform == TargetPlatform.macOS;
     final isLinux = defaultTargetPlatform == TargetPlatform.linux;
@@ -330,13 +354,9 @@ class _HomePageState extends State<HomePage> {
 
     final cameras = await availableCameras();
 
-    final XFile? resultImageFile = await navigator.push(
-      MaterialPageRoute(
-        builder: (context) => CameraScreen(
-          cameras: cameras,
-        ),
-      ),
-    );
+    widget.onCamera(cameras);
+    final XFile? resultImageFile =
+        await context.read<AddStoryImageProvider>().waitForResult();
 
     if (resultImageFile != null) {
       provider.setImageFile(resultImageFile);
@@ -345,7 +365,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _showImage() {
-    final imagePath = context.read<HomeProvider>().imagePath;
+    final imagePath = context.read<AddStoryImageProvider>().imagePath;
     return kIsWeb
         ? Image.network(
             imagePath.toString(),

@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:story_app_flutter/model/add_story_response.dart';
 import 'package:story_app_flutter/model/login_response.dart';
 import 'package:story_app_flutter/model/register_response.dart';
 import 'package:http/http.dart' as http;
 
 import '../model/detail_story_response.dart';
 import '../model/get_story_response.dart';
-import '../model/upload_response.dart';
+import '../model/add_story_response.dart';
 
 class ApiService {
   static const String _baseUrl = 'https://story-api.dicoding.dev/v1';
@@ -70,10 +69,10 @@ class ApiService {
   }
 
   Future<DetailStoryResponse> detailStoryResponse(
-      http.Client client,
-      String token,
-      String id,
-      ) async {
+    http.Client client,
+    String token,
+    String id,
+  ) async {
     final Map<String, String> headers = {"Authorization": "Bearer $token"};
 
     final response = await client.get(
@@ -88,53 +87,12 @@ class ApiService {
     }
   }
 
-  // Future<AddStoryResponse> addStoryResponse(
-  //   List<int> bytes,
-  //   String fileName,
-  //   String description,
-  // ) async {
-  //   final uri = Uri.parse('$_baseUrl/stories');
-  //   var request = http.MultipartRequest('POST', uri);
-  //
-  //   final multiPartFile = http.MultipartFile.fromBytes(
-  //     "photo",
-  //     bytes,
-  //     filename: fileName,
-  //   );
-  //   final Map<String, String> fields = {
-  //     "description": description,
-  //   };
-  //   final Map<String, String> headers = {
-  //     "Content-type": "multipart/form-data",
-  //     "Authorization": "Bearer <token>"
-  //   };
-  //
-  //   request.files.add(multiPartFile);
-  //   request.fields.addAll(fields);
-  //   request.headers.addAll(headers);
-  //
-  //   final http.StreamedResponse streamedResponse = await request.send();
-  //   final int statusCode = streamedResponse.statusCode;
-  //
-  //   final Uint8List responseList = await streamedResponse.stream.toBytes();
-  //   final String responseData = String.fromCharCodes(responseList);
-  //
-  //   if (statusCode == 201) {
-  //     final AddStoryResponse response = AddStoryResponse.fromRawJson(
-  //       responseData,
-  //     );
-  //     return response;
-  //   } else {
-  //     throw Exception("Add story error");
-  //   }
-  // }
-
-  Future<UploadResponse> uploadDocument(
-      String token,
-      List<int> bytes,
-      String fileName,
-      String description,
-      ) async {
+  Future<AddStoryResponse> addStoryResponse(
+    String token,
+    List<int> bytes,
+    String fileName,
+    String description,
+  ) async {
     const String url = "https://story-api.dicoding.dev/v1/stories";
 
     final uri = Uri.parse(url);
@@ -164,12 +122,12 @@ class ApiService {
     final String responseData = String.fromCharCodes(responseList);
 
     if (statusCode == 201) {
-      final UploadResponse uploadResponse = UploadResponse.fromJson(
+      final AddStoryResponse uploadResponse = AddStoryResponse.fromJson(
         responseData,
       );
       return uploadResponse;
     } else {
-      throw Exception("Upload file error");
+      throw Exception("Upload story error");
     }
   }
 }

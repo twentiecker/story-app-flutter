@@ -3,20 +3,17 @@ import 'package:image/image.dart' as img;
 
 import '../api/api_service.dart';
 import '../db/auth_repository.dart';
-import '../model/upload_response.dart';
+import '../model/add_story_response.dart';
 
-/// todo-03-upload-03: create UploadProvider file
-class UploadProvider extends ChangeNotifier {
+class AddStoryProvider extends ChangeNotifier {
   final ApiService apiService;
 
-  UploadProvider(this.apiService);
+  AddStoryProvider(this.apiService);
 
-  /// todo-03-upload-04: to handle upload state
   bool isUploading = false;
   String message = "";
-  UploadResponse? uploadResponse;
+  AddStoryResponse? addStoryResponse;
 
-  /// todo-03-upload-05: create a function to handle upload
   Future<void> upload(
     List<int> bytes,
     String fileName,
@@ -24,16 +21,15 @@ class UploadProvider extends ChangeNotifier {
   ) async {
     try {
       message = "";
-      uploadResponse = null;
+      addStoryResponse = null;
       isUploading = true;
       notifyListeners();
 
       final String token = await AuthRepository().getToken();
-      print(token);
 
-      uploadResponse =
-          await apiService.uploadDocument(token, bytes, fileName, description);
-      message = uploadResponse?.message ?? "success";
+      addStoryResponse = await apiService.addStoryResponse(
+          token, bytes, fileName, description);
+      message = addStoryResponse?.message ?? "success";
       isUploading = false;
       notifyListeners();
     } catch (e) {
@@ -43,7 +39,6 @@ class UploadProvider extends ChangeNotifier {
     }
   }
 
-  /// todo-05-compress-02: add new function to handle a image compress
   Future<List<int>> compressImage(List<int> bytes) async {
     int imageLength = bytes.length;
     if (imageLength < 1000000) return bytes;
@@ -54,7 +49,6 @@ class UploadProvider extends ChangeNotifier {
     List<int> newByte = [];
 
     do {
-      ///
       compressQuality -= 10;
 
       newByte = img.encodeJpg(
@@ -80,7 +74,6 @@ class UploadProvider extends ChangeNotifier {
     List<int> newByte = bytes;
 
     do {
-      ///
       compressTall -= 0.1;
 
       final newImage = img.copyResize(

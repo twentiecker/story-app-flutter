@@ -40,8 +40,8 @@ class CardWidget extends StatelessWidget {
                       ClipOval(
                         child: CachedNetworkImage(
                           imageUrl: story.photoUrl,
-                          width: ratio * 50,
-                          height: ratio * 50,
+                          width: ratio * 40,
+                          height: ratio * 40,
                           progressIndicatorBuilder: (context, url, progress) =>
                               CircularProgressIndicator(
                             value: progress.progress,
@@ -51,7 +51,6 @@ class CardWidget extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: screenSize.width * 0.02),
-                      // SizedBox(width: 10),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

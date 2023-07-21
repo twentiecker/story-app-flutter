@@ -5,8 +5,12 @@ class SocialWidget extends StatelessWidget {
   final double ratio;
   final double height;
 
-  const SocialWidget(this.source, this.ratio, this.height, {Key? key})
-      : super(key: key);
+  const SocialWidget({
+    Key? key,
+    required this.source,
+    required this.ratio,
+    required this.height,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

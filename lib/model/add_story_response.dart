@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final addStoryResponse = addStoryResponseFromJson(jsonString);
-
 import 'dart:convert';
 
 class AddStoryResponse {
@@ -13,19 +9,13 @@ class AddStoryResponse {
     required this.message,
   });
 
-  factory AddStoryResponse.fromRawJson(String str) =>
-      AddStoryResponse.fromJson(json.decode(str));
+  factory AddStoryResponse.fromMap(Map<String, dynamic> map) {
+    return AddStoryResponse(
+      error: map['error'] ?? false,
+      message: map['message'] ?? '',
+    );
+  }
 
-  String toRawJson() => json.encode(toJson());
-
-  factory AddStoryResponse.fromJson(Map<String, dynamic> json) =>
-      AddStoryResponse(
-        error: json["error"],
-        message: json["message"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "error": error,
-        "message": message,
-      };
+  factory AddStoryResponse.fromJson(String source) =>
+      AddStoryResponse.fromMap(json.decode(source));
 }

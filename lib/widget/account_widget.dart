@@ -32,8 +32,8 @@ class AccountWidget extends StatelessWidget {
           ClipOval(
             child: CachedNetworkImage(
               imageUrl: imgUrl,
-              width: ratio * 80,
-              height: ratio * 80,
+              width: ratio * 60,
+              height: ratio * 60,
               progressIndicatorBuilder: (context, url, progress) =>
                   CircularProgressIndicator(
                 value: progress.progress,

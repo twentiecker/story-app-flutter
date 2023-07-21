@@ -1,16 +1,17 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:story_app_flutter/api/api_service.dart';
-import 'package:story_app_flutter/model/get_story_response.dart';
-import 'package:story_app_flutter/screen/home_screen.dart';
+import 'package:story_app_flutter/screen/camera_screen.dart';
+import 'package:story_app_flutter/screen/exit_screen.dart';
+import 'package:story_app_flutter/screen/story_create_screen.dart';
 import 'package:story_app_flutter/utils/color_theme.dart';
 
 import '../db/auth_repository.dart';
-import '../model/quote.dart';
 import '../provider/get_story_response_provider.dart';
 import '../screen/login_screen.dart';
-import '../screen/quote_detail_screen.dart';
-import '../screen/quotes_list_screen.dart';
+import '../screen/story_detail_screen.dart';
+import '../screen/strory_list_screen.dart';
 import '../screen/register_screen.dart';
 import '../screen/splash_screen.dart';
 import '../utils/result_state.dart';
@@ -21,10 +22,8 @@ class MyRouterDelegate extends RouterDelegate
   final GlobalKey<NavigatorState> _navigatorKey;
   final AuthRepository authRepository;
 
-  MyRouterDelegate(
-    this.authRepository,
-  ) : _navigatorKey = GlobalKey<NavigatorState>() {
-    /// todo 9: create initial function to check user logged in.
+  MyRouterDelegate(this.authRepository)
+      : _navigatorKey = GlobalKey<NavigatorState>() {
     _init();
   }
 
@@ -37,16 +36,16 @@ class MyRouterDelegate extends RouterDelegate
   GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
 
   String? selectedQuote;
+  List<CameraDescription>? listCameras;
 
-  /// todo 8: add historyStack variable to maintaining the stack
   List<Page> historyStack = [];
   bool? isLoggedIn;
   bool isRegister = false;
   bool isAddStory = false;
+  bool isListStory = true;
 
   @override
   Widget build(BuildContext context) {
-    /// todo 11: create conditional statement to declare historyStack based on  user logged in.
     if (isLoggedIn == null) {
       historyStack = _splashStack;
     } else if (isLoggedIn == true) {
@@ -56,8 +55,6 @@ class MyRouterDelegate extends RouterDelegate
     }
     return Navigator(
       key: navigatorKey,
-
-      /// todo 10: change the list with historyStack
       pages: historyStack,
       onPopPage: (route, result) {
         final didPop = route.didPop(result);
@@ -65,9 +62,13 @@ class MyRouterDelegate extends RouterDelegate
           return false;
         }
 
-        isAddStory = false;
+        isAddStory == true || selectedQuote != null
+            ? isListStory = true
+            : isListStory = false;
         isRegister = false;
         selectedQuote = null;
+        listCameras != null ? isAddStory = true : isAddStory = false;
+        listCameras = null;
         notifyListeners();
 
         return true;
@@ -80,7 +81,6 @@ class MyRouterDelegate extends RouterDelegate
     /* Do Nothing */
   }
 
-  /// todo 12: add these variable to support history stack
   List<Page> get _splashStack => const [
         MaterialPage(
           key: ValueKey("SplashScreen"),
@@ -92,7 +92,6 @@ class MyRouterDelegate extends RouterDelegate
         MaterialPage(
           key: const ValueKey("LoginPage"),
           child: LoginScreen(
-            /// todo 17: add onLogin and onRegister method to update the state
             onLogin: () {
               isLoggedIn = true;
               notifyListeners();
@@ -120,85 +119,115 @@ class MyRouterDelegate extends RouterDelegate
       ];
 
   List<Page> get _loggedInStack => [
-        MaterialPage(
-          key: const ValueKey("QuotesListPage"),
-          child: ChangeNotifierProvider(
-            create: (BuildContext context) => GetStoryResponseProvider(
-                apiService: ApiService(), authRepository: authRepository),
-            child: Consumer<GetStoryResponseProvider>(
-              builder: (context, state, _) {
-                if (state.state == ResultState.loading) {
-                  return Scaffold(
-                    backgroundColor: grey,
-                    body: Center(
-                      child: CircularProgressIndicator(
-                        color: white,
+        const MaterialPage(
+          key: ValueKey("ConfirmPage"),
+          child: ExitScreen(),
+        ),
+        if (isListStory == true)
+          MaterialPage(
+            key: const ValueKey("StoryListPage"),
+            child: ChangeNotifierProvider(
+              create: (BuildContext context) => GetStoryResponseProvider(
+                apiService: ApiService(),
+                authRepository: authRepository,
+              ),
+              child: Consumer<GetStoryResponseProvider>(
+                builder: (context, state, _) {
+                  if (state.state == ResultState.loading) {
+                    return const Scaffold(
+                      backgroundColor: grey,
+                      body: Center(
+                        child: CircularProgressIndicator(
+                          color: white,
+                        ),
                       ),
-                    ),
-                  );
-                } else if (state.state == ResultState.hasData) {
-                  return QuotesListScreen(
-                    quotes: state.result.listStory,
-                    onTapped: (String quoteId) {
-                      selectedQuote = quoteId;
-                      notifyListeners();
-                    },
-
-                    /// todo 21: add onLogout method to update the state and
-                    /// create a logout button
-                    onLogout: () {
-                      isLoggedIn = false;
-                      notifyListeners();
-                    },
-                    onAddStory: () {
-                      isAddStory = true;
-                      print('isAddStory setelah diteken add story: $isAddStory');
-                      notifyListeners();
-                    },
-                  );
-                } else if (state.state == ResultState.noData) {
-                  return Scaffold(
-                    backgroundColor: grey,
-                    body: Center(
-                      child: StateWidget(
-                        icon: Icons.not_interested_rounded,
-                        message: state.message,
+                    );
+                  } else if (state.state == ResultState.hasData) {
+                    return StoryListScreen(
+                      quotes: state.result.listStory,
+                      onTapped: (String quoteId) {
+                        selectedQuote = quoteId;
+                        notifyListeners();
+                      },
+                      onLogout: () {
+                        isLoggedIn = false;
+                        notifyListeners();
+                      },
+                      onAddStory: () {
+                        isAddStory = true;
+                        isListStory = false;
+                        notifyListeners();
+                      },
+                    );
+                  } else if (state.state == ResultState.noData) {
+                    return Scaffold(
+                      backgroundColor: grey,
+                      body: Center(
+                        child: StateWidget(
+                          icon: Icons.not_interested_rounded,
+                          message: state.message,
+                        ),
                       ),
-                    ),
-                  );
-                } else if (state.state == ResultState.error) {
-                  return Scaffold(
-                    backgroundColor: grey,
-                    body: Center(
-                      child: StateWidget(
-                        icon: Icons.signal_wifi_connected_no_internet_4_rounded,
-                        message: 'No Internet Connection',
+                    );
+                  } else if (state.state == ResultState.error) {
+                    return const Scaffold(
+                      backgroundColor: grey,
+                      body: Center(
+                        child: StateWidget(
+                          icon:
+                              Icons.signal_wifi_connected_no_internet_4_rounded,
+                          message: 'No Internet Connection',
+                        ),
                       ),
-                    ),
-                  );
-                } else {
-                  return Scaffold(
-                    backgroundColor: grey,
-                    body: const Center(
-                      child: Text(''),
-                    ),
-                  );
-                }
-              },
+                    );
+                  } else {
+                    return const Scaffold(
+                      backgroundColor: grey,
+                      body: Center(
+                        child: Text(''),
+                      ),
+                    );
+                  }
+                },
+              ),
             ),
           ),
-        ),
         if (selectedQuote != null)
           MaterialPage(
             key: ValueKey(selectedQuote),
-            child: QuoteDetailsScreen(
+            child: StoryDetailScreen(
               quoteId: selectedQuote!,
+              onListStory: () {
+                selectedQuote = null;
+                notifyListeners();
+              },
             ),
           ),
-        if (isAddStory == true)
+        if (isAddStory == true && listCameras == null)
           MaterialPage(
-            key: const ValueKey("HomePage"),
-            child: HomePage(),
+            key: const ValueKey("StoryCreatePage"),
+            child: StoryCreateScreen(
+              onListStory: () {
+                isAddStory = false;
+                isListStory = true;
+                notifyListeners();
+              },
+              onCamera: (List<CameraDescription> cameras) {
+                listCameras = cameras;
+                notifyListeners();
+              },
+            ),
+          ),
+        if (listCameras != null)
+          MaterialPage(
+            key: ValueKey(listCameras),
+            child: CameraScreen(
+              cameras: listCameras!,
+              onCreateStory: () {
+                listCameras = null;
+                notifyListeners();
+              },
+            ),
           ),
       ];
 }

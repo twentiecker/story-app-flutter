@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../utils/color_theme.dart';
+import '../utils/style_theme.dart';
 
 class StateWidget extends StatelessWidget {
   final IconData icon;
@@ -15,8 +16,7 @@ class StateWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    final ratio =
-        (screenSize.width / screenSize.height) / (423.529419 / 803.137269);
+    final ratio = screenSize.height / 803.137269;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -26,7 +26,10 @@ class StateWidget extends StatelessWidget {
           color: white,
         ),
         SizedBox(height: ratio * 5),
-        Text('$message!', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: white),),
+        Text(
+          '$message!',
+          style: titleMedium(context, ratio, white, null),
+        ),
       ],
     );
   }

@@ -8,13 +8,13 @@ import 'package:story_app_flutter/widget/card_widget.dart';
 
 import '../provider/auth_provider.dart';
 
-class QuotesListScreen extends StatelessWidget {
+class StoryListScreen extends StatelessWidget {
   final List<ListStory> quotes;
   final Function(String) onTapped;
   final Function() onLogout;
   final Function() onAddStory;
 
-  const QuotesListScreen({
+  const StoryListScreen({
     Key? key,
     required this.quotes,
     required this.onTapped,
@@ -68,7 +68,7 @@ class QuotesListScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: screenSize.height * 0.02),
+            SizedBox(height: screenSize.height * 0.03),
             SizedBox(
               height: screenSize.height * 0.14,
               child: ListView.builder(
@@ -104,7 +104,6 @@ class QuotesListScreen extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(height: screenSize.height * 0.02),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(

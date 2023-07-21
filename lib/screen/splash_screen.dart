@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:story_app_flutter/utils/style_theme.dart';
 
 import '../utils/color_theme.dart';
 
-/// todo 13: create SplashScreen
 class SplashScreen extends StatelessWidget {
   const SplashScreen({
     Key? key,
@@ -10,8 +10,9 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final ratio = screenSize.height / 803.137269;
     return Scaffold(
-      // appBar: AppBar(),
       backgroundColor: grey,
       body: Center(
         child: Column(
@@ -22,17 +23,19 @@ class SplashScreen extends StatelessWidget {
               children: [
                 Text(
                   'story',
-                  style: Theme.of(context)
-                      .textTheme
-                      .displaySmall!
-                      .copyWith(color: white, fontWeight: FontWeight.bold),
+                  style: displaySmall(
+                    context,
+                    ratio,
+                    white,
+                  ),
                 ),
                 Text(
                   'app',
-                  style: Theme.of(context)
-                      .textTheme
-                      .displaySmall!
-                      .copyWith(color: lightGreen, fontWeight: FontWeight.bold),
+                  style: displaySmall(
+                    context,
+                    ratio,
+                    lightGreen,
+                  ),
                 ),
               ],
             )
