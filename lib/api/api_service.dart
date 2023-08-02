@@ -53,11 +53,13 @@ class ApiService {
   Future<GetStoryResponse> getStoryResponse(
     http.Client client,
     String token,
+    int page,
+    int size,
   ) async {
     final Map<String, String> headers = {"Authorization": "Bearer $token"};
 
     final response = await client.get(
-      Uri.parse('$_baseUrl/stories'),
+      Uri.parse('$_baseUrl/stories?page=$page&size=$size'),
       headers: headers,
     );
 

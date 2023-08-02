@@ -144,7 +144,7 @@ class MyRouterDelegate extends RouterDelegate
                     );
                   } else if (state.state == ResultState.hasData) {
                     return StoryListScreen(
-                      quotes: state.result.listStory,
+                      data: state,
                       onTapped: (String quoteId) {
                         selectedQuote = quoteId;
                         notifyListeners();

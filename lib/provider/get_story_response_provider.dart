@@ -14,14 +14,20 @@ class GetStoryResponseProvider extends ChangeNotifier {
     required this.apiService,
     required this.authRepository,
   }) {
-    _fetchGetStoryResponse();
+    fetchGetStoryResponse();
     _getStoryResponse =
         GetStoryResponse(error: false, message: 'Loading...', listStory: []);
     _state = ResultState.loading;
+    _stories = [];
   }
+
+  int? pageItems = 1;
+  int sizeItems = 10;
 
   late GetStoryResponse _getStoryResponse;
   late ResultState _state;
+  late List<ListStory> _stories;
+
   String _message = '';
 
   String get message => _message;
@@ -30,13 +36,26 @@ class GetStoryResponseProvider extends ChangeNotifier {
 
   ResultState get state => _state;
 
-  Future<dynamic> _fetchGetStoryResponse() async {
+  List<ListStory> get stories => _stories;
+
+  Future<dynamic> fetchGetStoryResponse() async {
     try {
       final String token = await authRepository.getToken();
-      _state = ResultState.loading;
+      if (pageItems == 1) {
+        _state = ResultState.loading;
+        notifyListeners();
+      }
+
       notifyListeners();
-      final getStoryResponse =
-          await apiService.getStoryResponse(http.Client(), token);
+      final getStoryResponse = await apiService.getStoryResponse(
+          http.Client(), token, pageItems!, sizeItems);
+
+      if (getStoryResponse.listStory.length < sizeItems) {
+        pageItems = null;
+      } else {
+        pageItems = pageItems! + 1;
+      }
+
       if (getStoryResponse.listStory.isEmpty) {
         _state = ResultState.noData;
         notifyListeners();
@@ -44,7 +63,9 @@ class GetStoryResponseProvider extends ChangeNotifier {
       } else {
         _state = ResultState.hasData;
         notifyListeners();
-        return _getStoryResponse = getStoryResponse;
+        return getStoryResponse.listStory.isNotEmpty
+            ? _stories.addAll(getStoryResponse.listStory)
+            : _stories;
       }
     } catch (e) {
       _state = ResultState.error;
