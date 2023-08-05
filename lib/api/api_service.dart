@@ -94,6 +94,8 @@ class ApiService {
     List<int> bytes,
     String fileName,
     String description,
+    double lat,
+    double lon,
   ) async {
     const String url = "https://story-api.dicoding.dev/v1/stories";
 
@@ -107,6 +109,8 @@ class ApiService {
     );
     final Map<String, String> fields = {
       "description": description,
+      "lat": lat.toString(),
+      "lon": lon.toString(),
     };
     final Map<String, String> headers = {
       "Content-type": "multipart/form-data",
